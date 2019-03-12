@@ -1,0 +1,49 @@
+////////////////////////
+////// CDC System //////
+////////////////////////
+
+//CDC inner wall
+BeginGeoCylinder
+Name            CDC inner wall
+Position        0.0  0.0  37.72 cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness       0.5 mm
+Material        iron
+XOX0            0.00913019
+Length          241.69 cm
+Radius           16.0  cm
+IsSensitive     false
+LayerName       CDC-walls
+EndGeoCylinder
+
+//CDC outer wall
+BeginGeoCylinder
+Name            CDC outer wall
+Position        0.0  0.0  37.72 cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness       5.0 mm
+Material        iron
+XOX0            0.0273248
+Length          241.69 cm
+Radius          113.0  cm
+IsSensitive     false
+LayerName       CDC-walls
+EndGeoCylinder
+
+//CDC Sensitive Layers
+BeginGasDetector
+GasDetName              CDC measurement layer
+GasDetPosition          0.0  0.0  37.73 cm
+GasDetRotAngles         0.0  0.0  0.0 deg
+GasDetRin                16.80 cm
+GasDetRout              111.14 cm
+GasDetLength            241.69 cm
+GasDetNLayers           56
+GasDetMaterial          TPCGAS
+GasDetLayerName         CDC-sensing-gas
+GasDetResolutionU       135.0 um
+GasDetResolutionV       135.0 um
+GasDetEfficiency          0.99
+GasDetROtime              1.0 us
+GasDetBkgRate             0.0 kHz/cm2
+EndGasDetector

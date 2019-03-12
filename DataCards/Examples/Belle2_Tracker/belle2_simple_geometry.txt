@@ -1,0 +1,43 @@
+//////////////////////////////////////////////
+// Description: BELLE II Tracking System simplified //
+//   - Geometry Visualization               //
+//////////////////////////////////////////////
+
+ParticleType:   mu+
+ParticleOrigin: 0.0  0.0  0.0  cm
+ReferencePoint: 0.0  0.0  0.0  cm
+
+MomentumValues: 0.1 0.5  1.0  2.0  GeV/c
+
+PolarAngleValues:  18.0 45.0 159.0 deg
+
+AzimuthalAngleValues:   0.0 deg
+
+//Voxels definition
+BeginVoxeling
+  BeginVoxel
+    zRange          0.0   10.0  m
+  EndVoxel
+EndVoxeling
+
+
+//Geometry lists
+BeginGeometries
+  DataCards/belle2_simplified/GeometryCards/belle2_TrackinSystem_Geometry.txt
+EndGeometries
+
+OutputFile:  Plots/belle2_simplified/belle2_TrackingSystem_GeometryVisualization
+
+//List of analysis flags
+//PrintGeometry:             true
+PrintGeometryWeight:       true
+PlotGeometry:              true
+//PlotWorldVolume:           true
+DoRZGeoRepresentation:     true
+PlotSomeTracks:            true
+UseAllMomVals:             true
+//DoTrkResolAnalysis:        true
+//DoTelescopeAnalysis:       true
+//DoMaterialBugdetAnalysis:  true
+SavePlots:                 true
+

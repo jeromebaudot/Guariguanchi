@@ -1,0 +1,24 @@
+//Systems configuration
+
+BeginSystemsConfiguration
+  BeginSystem
+    Name        Beam-Pipe
+    LayersList  Beam-Pipe
+  EndSystem
+  
+  BeginSystem
+    Name        PXD detector
+    LayersList  PXD1 PXD2
+  EndSystem
+  
+  BeginSystem
+    Name        SVD detector
+    LayersList  SVD3 SVD4 SVD5 SVD6
+  EndSystem
+  
+  BeginSystem
+    Name        CDC detector
+    LayersList  CDC-walls CDC-sensing-gas
+  EndSystem
+EndSystemsConfiguration
+

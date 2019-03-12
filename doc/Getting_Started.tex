@@ -1,0 +1,728 @@
+\section{Getting Started}
+\label{sec:Getting_started}
+
+\subsection{Installation}
+
+{\guari} has been fully tested with {\tt ROOT} version 5.34/32 and is expected to work with higher versions. To install {\guari} 
+you will need to go to the following website: FFFFF. By clicking at the XXX link you will download a {\tt guariguanchi.tar.gz} file. 
+Unpack it with the following command,
+
+~\\
+\noindent
+{\tt >\$ tar -xzvf guariguanchi.tar.gz}
+~\\
+
+\noindent
+Then go to the {\tt Guariguanchi} directory and simply do,
+
+~\\
+\noindent
+{\tt >\$ ./Compile.sh}
+~\\
+
+\noindent
+It should produce a list compiled objects ({\tt .o} files) inside the {\tt lib/} directory, as well as an executable inside the {\tt bin/} 
+directory called {\tt GuariguanchiApp}. If you get some compilation errors you maybe need to verify the options during your {\tt ROOT} build-up. 
+
+% The details of the calculations are explained in section~\ref{sec:Math_formalism}.
+
+\subsection{Playing with some examples}
+\label{subsec:Some_examples}
+
+Once the package is compiled it is quite simple to use. You just need to get a data-card ({\tt datacard.txt}) and run {\guari} as 
+follows,
+
+~\\
+\noindent
+{\tt >\$ ./bin/GuariguanchiApp  datacard.txt}
+~\\
+
+\noindent
+Now let's play with some examples and discover the package in the process.
+
+\subsubsection{Example-1: Beam-test}
+\label{subsubsec:Example1}
+
+This example consist on a classic beam-test configuration, in which only straight tracks will be considered (no magnetic field). 
+What is mainly needed in this analysis is the telescope pointing resolution at the DUT's positions. All the data-cards for this 
+example can be found at the directory, 
+
+~\\
+{\tt DataCards/Examples/BeamTest\_Example/}.
+~\\
+
+\noindent
+Lets open the main data-card, {\tt BeamTest\_datacard.txt}, and take a look at it. The configuration is specified with a list of 
+parameters blocks which will be described here below (for a complete description of all the possible parameters specified in the 
+main data-card see sec.~\ref{sec:analysis_config}).
+
+\begin{itemize}
+ \item  {\tt ParticleType:} in the present case we consider an electron ({\tt e-}).
+ 
+ \item  {\tt ParticleOrigin:} point from which the particle will be tracked in the process of geometry navigation. Current value is $(0,0,-1)~{\rm cm}$.
+ 
+ \item  {\tt ReferencePoint:} pivot-point for trajectory parameterization. Current value is $(0,0,10)~{\rm cm}$.
+ 
+ \item  The momentum values are specified as a set of $(p,\theta,\phi)$ values. In the current case 
+ 
+  \begin{itemize}
+   \item  $p$-values: range inside the {\tt BeginMomentumScan} and {\tt EndMomentumScan} bock $\Rightarrow$ 30 bins between $1$ and $40$ ${\rm GeV/c}$.
+   
+   \item  $\theta$-values: set of discrete values $\Rightarrow$ single value of $0~{\rm deg}$.
+   
+   \item  $\phi$-values: set of discrete values $\Rightarrow$ single value of $0~{\rm deg}$.
+  \end{itemize}
+  
+  \item {\tt TrkResolAnalysisParams} block. In the present case we are going to study the telescope resolution at DUT positions. The configuration for 
+  this analysis is specified inside the block between {\tt BeginTrkResolAnalysisParams} and {\tt EndTrkResolAnalysisParams}. Only three parameters are 
+  specified in this case.
+  
+  \begin{itemize}
+   \item  {\tt NhitsMin}: minimum number of hits for a track. In this case it is set to 2 (minimum number of hits to reconstruct a straight line).
+   
+   \item  {\tt SameRange}: flag to use same vertical range for all plots. Set to {\tt false} in this case. 
+   
+   \item  {\tt UseAllMomVals}: flag to use all specified momentum values for additional plots. Set to {\tt true} in this case.
+  \end{itemize}
+  
+  \item  The list of geometries is specified inside the block between {\tt BeginGeometries} and {\tt EndGeometries}. In there the list of geo-data-cards is specified.
+  In the current case four geometries are given.
+  
+  \item  {\tt OutputFile:} output file generic name (no extension). The output of the program will generate a set of output files with the specified generic name 
+  plus the corresponding extension, {\it e.g.} {\tt .pdf} and/or {\tt .root}.
+  
+  \item  Finally a set of flags will determine the output plots and files. In the current example we have,
+  
+  \begin{itemize}
+   \item  {\tt PrintGeometry:} print-out of all specified geometries.
+   \item  {\tt PlotGeometry:} visualization of all specified geometries.
+   \item  {\tt PlotWorldVolume:} if {\tt PlotGeometry} is set to {\tt true} will also visualize geometry's world volume.
+   \item  {\tt DoTelescopeAnalysis:} flag to perform a Telescope analysis.
+   \item  {\tt SavePlots:} flag to save plots in a {\tt .root} output file.
+  \end{itemize}
+  
+\end{itemize}
+
+\noindent
+Now lets run this example as follows,
+
+~\\
+\noindent
+{\tt >\$ ./bin/GuariguanchiApp  fullpath/BeamTest\_datacard.txt}
+~\\
+
+\noindent
+where {\tt fullpath} is the full path to the main data-card location.
+The execution should take about 20 seconds. You should see a lengthy printout with all the geometries ({\tt PrintGeometry} set to {\tt true}). 
+It also produced two output files, one {\tt .pdf} and one {\tt .root}, inside the {\tt Plots/Examples/BeamTest\_Example/} output directory. 
+Lets open the {\tt .pdf} file. This is a multi-page file with several plots.
+
+The first four pages is a visualization of the four specified geometries. The geometries are projected in the $Z-Y$, $Z-X$ 
+and $X-Y$ planes. We can see 9 yellow elements, which are silicon planes. Six of them are the telescope planes (big ones located between 
+$(0,10)~{\rm cm}$ and $(10,20)~{\rm cm}$ in $Z$). The smaller planes are DUT-1,2 and 3, located at $Z = 0,10,20~{\rm cm}$, respectively. 
+The red-dotted line represents the geometry's world volume, which in this case is a box. It can be seen that the only change from one 
+geometry to the next are the locations of the telescope planes.
+
+The 5th page shows the track's parameters resolution vs momentum for the only $(\theta,\phi) = (0,0)~{\rm deg}$ value specified. As there is no 
+magnetic field the trajectories are straight lines, needing only four parameters defined at the pivot point: ${\rm tan}(\alpha_{x})$, $x_{0}$, 
+${\rm tan}(\alpha_{y})$ and $y_{0}$. The color code is described in the legend at the bottom-right part of the page, each color corresponding to 
+one of the specified geometries. The momentum-dependence of tracking performances is due to the multiple-scattering (MS), which decreases as 
+momentum increases.
+
+The last three pages show the telescope pointing resolution at the DUT positions vs momentum. The plots on the top show the telescope 
+pointing resolution on the DUT-plane local $U$ and $V$ coordinates, top-left and top-right plots, respectively. The bottom-left
+plot shows the $1-\sigma$ area $S$ (taking correlations into account) of the telescope's pointing resolution. Finally, the bottom-right 
+plot shows the number of background hits in this $S$ surface calculated using the DUT's readout time $t_{\rm r.o.}$ and background level 
+$R_{\rm bkg}$ (hits per unit time per unit surface) as follows,
+
+\begin{equation}
+ {\rm N_{bkg}} = S \times t_{\rm r.o.} \times R_{\rm bkg}.
+\end{equation}
+\noindent
+This last quantity is useful in studying the probability of wrong hit association in tracking pattern recognition.
+
+~\\
+\noindent
+Just to finalize discussing this example lets explore the geo-data-cards. All the data-cards are inside the directory 
+
+~\\
+\noindent
+{\tt DataCards/Examples/BeamTest\_Example/GeometryCards/} 
+~\\
+
+\noindent
+All are very similar, so it will be enough to take a look of just one of them, {\it e.g.} {\tt BeamTestGeometry\_v1.txt}. It 
+starts with the specification of the geometry name {\tt GeometryName:}, followed by a set of input files ({\tt InputFile:}) 
+in which different aspects of the geometry are specified. The content of the input files could directly be written inside 
+the geo-data-card, but this modularity has the advantage to simplify the reading of the geometry as well as allows to specify 
+just once aspects shared by different geometries.
+
+In this example each geo-data-card has four input files, three of them being common to all. The content of the input files is the following,
+\begin{itemize}
+ \item  {\bf Geometry's world volume:} It is a volume which contains all the elements of a geometry. In the current case it is just a box 
+ located at the origin and with widths $(W_x,W_y,W_z) = (3,4,22)~{\rm cm}$. 
+ 
+ \item  {\bf DUT planes:} this file contains the set of DUT planes. Each one is a geometry-object called {\tt GeoPlane}, corresponding to so-called 
+ "planes", which are boxes with one of the dimensions being small compared to the others two. The variables inside the block between {\tt BeginGeoPlane} and {\tt EndGeoPlane} are 
+ self evident. More details will be given in sec.~\ref{sec:GeoConf}. Just note that the in this file there are specified three 
+ DUT planes, with thicknesses of $50~{\rm \mu m}$, widths of $(W_u,W_v) = (1,1)~{\rm cm}$, parallel to the $X-Y$ plane and located at 
+ $(X,Y) = (0,0)$ and $Z = 0,10,20~{\rm cm}$, respectively. For the beam-telescope analysis one important variable is the {\tt LayerName},
+ which will be used to identify the planes as DUTs.
+ 
+ \item  {\bf Telescope planes:} each element in this input file is a {\tt GeoPlane} object. Six planes are specified 
+ with thicknesses of $50~{\rm \mu m}$, widths of $(W_u,W_v) = (2,3)~{\rm cm}$, parallel to the $X-Y$ plane and located at $(X,Y) = (0,0)$ and 
+ $Z = 1,3,5,15,17,19~{\rm cm}$, respectively. As in the case of the DUT planes, one important variable is the {\tt LayerName}, which will be 
+ used to identify the telescope planes. The other geometries differ in the position of the telescope planes.
+ 
+ \item  {\bf Beam-Test configuration:} in this file the telescope and DUT planes are identified. It is done by specifying inside the block between
+ {\tt BeginBeamTestConfiguration} and {\tt EndBeamTestConfiguration} the list of telescope planes ({\tt TelescopeLayersList}) and DUT planes 
+ ({\tt DUTLayersList}). This is how the analysis knows which planes are going to be used for tracking (telescope) and which ones considered 
+ as DUTs. If there is any other geometry-object not belonging to the telescope or DUT list, it will be considered as a insensitive element 
+ only contributing to multiple-scattering.
+ 
+\end{itemize}
+
+\noindent
+The output {\tt .root} file contains a set of canvases and {\tt TGraph} objects. By their naming it is self evident what they are. We strongly recommend 
+the user to open this file with {\tt ROOT} and plot its contents.
+
+~\\
+\noindent
+Something that should have been noticed by now is that {\guari} has a unit system. This is why all the specified quantities have to 
+be accompanied of the corresponding units. Furthermore, in the data-cards files all contents after a double-slash "//" are considered as 
+commentary and not readout.
+
+\subsubsection{Example-2: All-silicon vertex detector \& tracker}
+\label{subsubsec:Example2}
+
+This example considers an all-silicon vertex detector and tracker with cylindrical detection layers similar to the design of the ALICE 
+Inner-Tracking-System upgrade~\cite{bib:ALICE_ITS_Upgrade}. The system is inside a solenoidal magnetic field of $0.5~{\rm Tesla}$ along the 
+$z$-axis. In this case particles will describe Helix trajectories, which can be described with 5 parameters. In this package we use 
+the same parameters as in Belle~\cite{bib:BelleHelixParam}: $d_{\rho}$, $d_z$, $\phi_0$, $tan\lambda$ and signed $p_t$. All the data-cards 
+for this example can be found at the directory, 
+
+~\\
+{\tt DataCards/Examples/VertexDetector\_and\_Tracker\_Example/}.
+~\\
+
+\noindent
+As you can notice, there are four main data-cards. Each one of them will serve to illustrate different analyses that can be performed with this 
+package, and will be discussed in the following. 
+
+\subsubsection*{Geometry visualization}
+
+Lets start with a simple visualization of the geometries. For this lets open the data-card with the name
+
+~\\
+{\small{\tt VertexDetector\_and\_Tracker\_datacard\_GeometryVisualization.txt}}.
+~\\
+
+Much of the parameters in this file have already been described in the previous example (c.f. sec.~\ref{subsubsec:Example1}). 
+In this case we consider $\mu^{+}$ as primary particles created at the origin, the pivot point is also fixed at the origin, 
+and the momentum variables are specification in the same way as in the previous example. Two geometries are considered here. 
+In order to visualize them just execute {\tt ./bin/GuariguanchiApp} with this data-card. The list of analysis flags set to {\tt true} 
+in the main data-card should give an idea of what is going to be the output of this command,
+
+\begin{itemize}
+ \item  {\tt PrintGeometry:} print out of the geometries.
+ 
+ \item  {\tt PrintGeometryWeight:} print out of the geometries weight. As can be seen, the weight are separated by systems. The 
+ total weight is also printed-out.
+ 
+ \item  {\tt PlotGeometry:} a visual representation similar to the previous example will be created. If this variable is set to {\tt true},
+ other options can be considered.
+ \begin{itemize}
+  \item  {\tt PlotWorldVolume:} a visual representation of the geometry's world volume will be created.
+  \item  {\tt DoRZGeoRepresentation:} a $R-Z$ representation of the geometry will be created. This representation is useful for 
+  geometries with cylindrical symmetry with respect to the z-axis.
+  \item  {\tt PlotSomeTracks:} for each value of $(\theta,\phi)$ specified a set of particle's average trajectories (no MS) as well as 
+  their intersections with the geometry will be displayed.
+ \end{itemize}
+
+ \item  {\tt SavePlots:} as in the previous example, a {\tt .root} file will be created.
+\end{itemize}
+
+Given the options above, a {\tt .pdf} and {\tt .root} files are crated. The {\tt .pdf} file is again a mult-page file with several plots. 
+Pages 1 and 2 show a visualization of the first geometry specified (Vertex \& Tracker Setup v1). Page 1 shows a visualization on the $Y-Z$, 
+$X-Z$ and $X-Y$ planes of the geometry. Page 2 shows a $R-Z$ representation of the geometry. It can be seen that this geometry is mainly 
+made of cylinders of different radii and lengths. The innermost one in green is a representation of a beam-pipe, made of beryllium. The yellow 
+cylinders are the layers of the vertex detector and tracker, seven $50~{\rm \mu m}$ thickness silicon layers. Finally, the dotted-red 
+line is a representation of the geometry's world volume. Pages 3 and 4 show similar visualizations for the second geometry specified (Vertex \& 
+Tracker Setup v2). The difference of this last geometry with the first one is the radius and length of the 3rd tracker layer.
+
+Pages 5-10 show a display of the first geometry with a set of track superimposed. Each set of plots corresponds to a fixed value of the specified
+$(\theta,\phi)$ (see plot titles). The different colors correspond to the momenta specified in the legend box, which is a set of 10 values 
+between the minimum and maximum specified momenta in the main data-card. The intersections of the tracks with the geometries are also shown 
+(filled-circular-dots). Pages 11-16 show similar plots for the second geometry.
+
+The output {\tt .root} file contains a set of canvases with the same geometry representations, which can be manipulated by the user in order to 
+better understand the geometry as well as tracks intersections with geometries.
+
+This geometry visualization feature is very useful in the process of building a geometry, as well as to understand the tracking performances, as 
+it depends on the track intersections with sensitive layers (number of hits) and insensitive elements (material budget) of the geometry elements. 
+
+~\\
+Before exploring the other analyses data-cards, lets take a look of the geo-data-cards which are inside the {\tt GeometryCards} directory. The 
+configuration files of both geometries are very similar, so it will be enough to take a look of one of them, {\it e.g.} {\tt Si\_Tracker\_Geometry\_v1.txt}.
+
+The first parameter specified is the geometry name ({\tt GeometryName:}). As in the previous example, there is a set of input files, each one describing 
+one feature of the geometry,
+
+\begin{itemize}
+ \item  {\bf Geometry's world volume:} in this case it is a cylinder centered at the origin and with radius and length of $50~{\rm cm}$ and $170~{\rm cm}$, 
+ respectively.
+ 
+ \item  {\bf Magnetic field:} a constant magnetic field of magnitude of $0.5~{\rm Tesla}$ and along the positive z-axis.
+ 
+ \item  {\bf Beam-pipe:} a cylinder ({\tt GeoCylinder} object) made of beryllium centered at the origin, with radius, length and thickness of $1.96~{\rm cm}$, $20~{\rm cm}$ and $0.8~{\rm mm}$, 
+ respectively. Notice that the {\tt LayerName} has been set to "Beam-Pipe". It will be used later to define the different systems of the geometry.
+ 
+ \item  {\bf The Tracker:} a set of 7 cylinders ({\tt GeoCylinder} objects), all made of silicon with $50~{\rm \mu m}$ thickness at different radii and lengths. All of 
+ them also share the same single point resolution ({\tt ResolutionU} and {\tt ResolutionV}), readout time ({\tt ROtime}) and detection efficiency ({\tt Efficiency}) 
+ of $4~{\rm \mu m}$, $10~{\rm \mu s}$ and $99~\%$, respectively. Notice the value of the {\tt LayerName} variable. It will be used later to setup a telescope-DUT 
+ configuration as well as to define the different systems of the geometry.
+ 
+ \item  {\bf Telescope-DUT config:} this file is similar to the corresponding one of the previous example. In this case the innermost layer is considered as DUT 
+ and all the rest as telescope.
+ 
+ \item  {\bf Systems definition:} this is a new feature in which different "layers" can be put together to define a system. In this example there are three 
+ systems defined,
+ \begin{itemize}
+  \item  Beam-Pipe system: including the beam-pipe;
+  
+  \item  Tracker-Inner Barrel: including the three innermost tracker layers;
+  
+  \item  Tracker-Outer Barrel: including the four outermost tracker layers.
+ \end{itemize}
+  This system definition can be useful to perform material budget analyses as well as performing cut for good tracks when doing
+  efficiency calculations.
+  
+  \item  {\bf Track-Finding lagorithms:} this file contains all the needed information for the tracking efficiency calculation. A list of so-called 
+  track-finder algorthms will be specified for different regions in the particle's origin and momenta. A track finder algorithm is specified in the 
+  block between {\tt BeginXXXTrackFinderAlgo} and {\tt EndXXXTrackFinderAlgo}, where {\tt XXX} refers to a given track-finder algorithm. In the current 
+  case it is used the FPCCD track-finder ({\tt FPCCDTrackFinderAlgo}), one of the pattern recognition algorthms used by the ILD collaboration~\cite{bib:ILD_FPCCD_TrackFinder}.
+  
+  The region where this track-finder will be applied is defined in the block between {\tt BeginTrackFinderRegion} and {\tt EndTrackFinderRegion}. In 
+  the current case it corresponds momentum $\theta$ range between $(25.0,110.0)~{\rm deg}$.
+  
+  The "parameters" of this tracking finder are listed below,
+  \begin{itemize}
+    \item  {\tt NhitsMin}: minimum number of hits.
+    
+    \item  {\tt PtMin}: minimum transverse momentum cut for track-seeding.
+    
+    \item  {\tt CenterPosition:} coordinates of the track-center used for the minimum track-seeding cut.
+    
+    \item  {\tt PurityMin}: minimum track purity, defined as the ratio (\# good hits)/(\# total hits). This allows for a number of so-called fake 
+    hits associated to the track.
+    
+    \item  {\tt NfakesMaxSeeding}: maximum number of fake hits for track-seeding. This parameter can take either the values 0 or 1.
+    
+    \item  {\tt Chi2OndfSeed}: $\chi^2$ cut for seed tracking.
+    
+    \item  {\tt Chi2OndAdd}: $\chi^2$ cut for hit-track association in the process of inward tracking.
+    
+    \item  {\tt InwardTracking}: bool parameter to define the tracking direction, either inward or outward.
+    
+    \item  {NmcSeedEffic}: number of samplings for a MC calculation of the seeding probability.
+  \end{itemize}
+  
+  The list of geometry elements to be considered in the tracking efficiency calculation is defined by specifying a list of systems inside the {\tt BeginSystems} and {\tt EndSystems} block.
+  This allows to use a sub-set of the tracking system for tracking efficiency calculation. In the current case all the systems are considered.
+  
+  Finally, a list of so-called "seeding configurations" are specified in the block inside {\tt BeginSeedConfigs} and {\tt EndSeedConfigs}. Each element is a set of 3 {\tt LayerNames} to be 
+  used as a seed.
+  
+  More detail about the configuration of a track-finder algorithm can be found in sec.~\ref{subsec::TrkFinder_config} and a full explaination of the formalism for the tracking efficiency calculation 
+  is is given in sec.~\ref{subsec:TrkEffic_calculation}.
+  
+\end{itemize}
+
+\subsubsection*{Tracking resolution analysis}
+
+The data-card for this analysis is the one with the name
+
+~\\
+{\small {\tt VertexDetector\_and\_Tracker\_datacard\_TrackerResolution.txt}}.
+~\\
+
+\noindent
+It is very similar to the one for geometry visualization. The main difference is the specification of the {\tt TrkResolAnalysisParams} block and a set of different flags set to {\tt true}
+at the end of the file. In this case the {\tt NhitsMin} is set to 3 (the minimum number of hits to reconstruct a helix), and a new flag {\tt UseLogY} is used and set to {\tt true}. 
+This is only to use a logarithmic scale in the vertical axis of the track performances plots that will be produced. If not specified or set to {\tt false} a linear scale will be used instead.
+
+Only two flags are set to {\tt true} at the end of the file, {\tt SavePlots} and {\tt DoTrkResolAnalysis}. This last one is for turning-on the tracking resolution analysis. This 
+analysis will produce plots of the resolution on the track parameters vs momentum. The tracking calculation will be performed using all the track intersections with the geometry's 
+sensitive elements. Lets execute this analysis as follows,
+
+~\\
+{\small {\tt ./bin/GuariguanchiApp  fullpath/VertexDetector\_and\_Tracker\_datacard\_TrackerResolution.txt}}.
+~\\
+
+\noindent
+A {\tt .pdf} and {\tt .root} files have been produced. The {\tt .pdf} file have several pages showing the resolution of track parameters vs momentum: $\sigma(d_{\rho})$ (top-left),
+$\sigma(\phi_0)$ (top-middle), $\sigma(d_z)$ (top-right), $\sigma(tan\lambda)$ (bottom-left) and $\sigma(p_{t})/p_{t}$ (bottom-middle). The color code is explained at the bottom-right 
+legend, each one corresponding to the geometries specified. A vertical logarithmic scale is used as the {\tt UseLogY} parameter have been set to {\tt true} inside the {\tt TrkResolAnalysisParams} 
+block in the main data-card file. Each page of this file show the tracking performances vs momentum for each of the $(\theta,\phi)$ values specified in the main data-card.
+
+The {\tt .root} file content is self-explaining. We strongly advice the user to plot its contents.
+
+\subsubsection*{Telescope analysis}
+
+The data-card for this analysis is the one with the name
+
+~\\
+{\small {\tt VertexDetector\_and\_Tracker\_datacard\_TelescopeAnalysis.txt}}.
+~\\
+
+\noindent
+It is very similar to the one of the Tracking resolution analysis, the only difference being the analysis flag set to {\tt true} at the end of the data-card, {\tt DoTelescopeAnalysis}. 
+An analysis similar to the one of the beam-test configuration, with the only difference that in this case the tracks wont be straight but helices. Lets execute it as follows,
+
+~\\
+{\small {\tt ./bin/GuariguanchiApp fullpath/VertexDetector\_and\_Tracker\_datacard\_TelescopeAnalysis.txt}}.
+~\\
+
+A {\tt .pdf} and {\tt .root} files have been produced. A very similar set of telescope tracking performances and pointing resolution plots as in first example (c.f. sec.~\ref{subsubsec:Example1}) 
+are shown in the different pages of the output {\tt .pdf} file. The main differences here is that the track has five parameters instead of four and there is only one DUT specified. 
+
+\subsubsection*{Efficiency analysis}
+
+The data-card for this analysis is the one with the name
+
+~\\
+{\small {\tt VertexDetector\_and\_Tracker\_datacard\_TrackingEfficiencyAnalysis.txt}}.
+~\\
+
+\noindent
+It is very similar to the one from the previous analyses, the main difference being the specification of the {\tt EfficAnalysisParams} block and a set of different flags set to {\tt true}
+at the end of the file. The {\tt EfficAnalysisParams} is very similar to the {\tt TrkResolAnalysisParams} block. The parameters inside control the plots to be produced by the analysis. A set of 
+similar variables as for the track parameters resolution analysis are available.
+
+There is an additional variable called {\tt MCSeed}. This parameter is a seed number used for the initialization of the random generator used for the MC track-seeding efficiency calculation. 
+If not specified a default value will be used.
+
+Only two flags are set to {\tt true} at the end of the file, {\tt SavePlots} and {\tt DoPseudoEfficVsMon}. This last one is for turning-on the tracking efficiency analysis. This 
+analysis will produce plots of the tracking efficiency and average track parameters resolution vs momentum. Lets execute this analysis as follows,
+
+~\\
+{\small {\tt ./bin/GuariguanchiApp  fullpath/VertexDetector\_and\_Tracker\_datacard\_TrackingEfficiency.txt}}.
+~\\
+
+\noindent
+A {\tt .pdf} and {\tt .root} files have been produced. The {\tt .pdf} file have several pages showing the tracking efficiency vs momentum for the different values of the $(\theta,\phi)$ 
+specified in the main data-card. Each tracking efficiency page shows 4 plots. The one at the top-left is the total tracking efficiency, including configurations with fake hits. The 
+top-right plot shows the tracking efficiency for track without fake hits associated. The bottom-left (bottom-right) plot show the tracking effciency for tracks having one (two or more) 
+fake hit associated.
+
+Other pages of the {\tt .pdf} file show the average of the track parameter resolution, where the average is weighted with each track configuration probability. The plots show a "threshold" behaviour, raising 
+from zero above a given momentum corresponding to non-zero tracking efficiency.
+
+At the end of the file (pages 9-28) show the tracking efficiency and average track parameters resolution as a function of $\theta$ for a fix value of the particle's momentum.
+
+~\\
+\noindent
+The {\tt .root} file content is self-explaining. We strongly advice the user to plot its contents.
+
+\subsubsection*{Material budget analysis}
+
+Finally, this analysis illustrates the kind of plots that can be produced about a geometry's material budget. The main data-card for this analysis is,
+
+~\\
+{\small {\tt VertexDetector\_and\_Tracker\_datacard\_MaterialBudgetAnalysis.txt}}.
+~\\
+
+\noindent
+This data-card is pretty similar to the previous ones in this example. A new way of specifying the polar angle is illustrated in here, where it is the $\cos\theta$ and not $\theta$ which is 
+specified. As this data-card intends a material budget analysis the {\tt MatBudgetAnalysisParams} block needs to be specified. In there a minimum and maximum value of the momentum are specified. 
+Finally, at the bottom the flag {\tt DoMaterialBugdetAnalysis} is set to {\tt true}.
+
+% \newpage
+Lets execute this analysis as follows,
+
+~\\
+{\small {\tt ./bin/GuariguanchiApp fullpath/VertexDetector\_and\_Tracker\_datacard\_MaterialBudgetAnalysis.txt}}.
+~\\
+
+\noindent
+A {\tt .pdf} and {\tt .root} files have been produced. The {\tt .pdf} file has just a couple of pages, corresponding to the couple of geometries specified. Each page contains three 
+plots showing the material budget vs the "polar variable" specified in the main data-card, which in present case is $\cos\theta$. The material budget a particle encounters 
+inside a magnetic field will depend on its momentum. This is the reason of the three plots in each page of the {\tt .pdf} file, each one corresponding momentum values: 
+{\tt mom\_min}, $0.5\times$({\tt mom\_min} $+$ {\tt mom\_max}) and {\tt mom\_max}, where {\tt mom\_min} and {\tt mom\_max} are specified inside the {\tt MatBudgetAnalysisParams} block 
+in the main data-card file. The fill color code is explained in the bottom-right legend, where the names corresponds to the systems defined inside the systems definitions input file 
+for the geometries.
+
+\subsubsection{Example-3: Simplified ILD tracking system}
+\label{subsubsec:Example3}
+
+This example considers a simplified model of the ILD tracking system~\cite{bib:ILDcoll}. This model includes the vertex detector (VXD), the Silicon-inner-tracker (SIT), 
+the Forward-Tracking-Detector (FTD) and the Time-projection-Chamber (TPC). The VXD, SIT and TPC systems are modeled as in the previous example as a set {\tt GeoCylinder} 
+objects. The FTD system is modeled as a set of disks ({\tt GeoDisk} objects). The geometry description in this example also includes a set of insensitive elements such 
+as the beam-pipe, supports and data/power cables which are a combination of cylinders, disks and cones ({\tt GeoCylinder}, {\tt GeoDisk} and {\tt GeoCone} objects, respectively), 
+in order to have a more realistic estimation of the MS impact on tracking performances. This example will be a good opportunity to show the implementation of a gas tracking detector 
+(TPC) in a geometry.
+
+~\\
+\noindent
+All the data-cards for this example can be found in the following directory,
+
+~\\
+{\small {\tt DataCards/Examples/Simplified\_ILD\_Tracking/}}.
+~\\
+
+\noindent
+Before running any analysis lets take a look at the geometry, which is the file {\tt ILC\_TrackinSystem\_Geometry.txt} inside the {\tt GeometryCards} directory.
+As in the previous examples, there are a number of input files, which describe the different features of the geometry. Many features have been already described 
+in previous examples, we will only focus on the new ones,
+
+\begin{itemize}
+ \item  {\bf The VXD system:} this input file is made in turn of several inputs files, each one describing the different features of the VXD system, which include 
+ the sensitive layers as well as insensitive materials such as supports, Faraday cage (for electrical isolation) and power/data cables.
+ 
+ The inputs files describing the insensitive materials are a good example of implementation of cylinders, cones and disk which are not sensitive.
+ 
+ The input file for the VXD sensitive layers show a new feature for geometry description. Each element is a so-called {\tt LadderCylinder}, inside the 
+ {\tt BeginLadderCylinder} and {\tt EndLadderCylinder} block. The {\tt LadderCylinder} object is an imaginary cylinder which contains additional cylinders
+ inside, which are specified inside the {\tt BeginCylinder} and {\tt EndCylinder} block. All the cylinders are centered at the {\tt LadderCylinder} position.
+ Each one has its own attributes ({\it e.g.} radius, length, ...), but the radii are specified with respect to the {\tt LadderCylinder} radius. For example,
+ A cylinder with local radius $r_i$, will have a global radius $R_i = r_i + R_{\rm ladder}$, where $R_{\rm ladder}$ is the {\tt LadderCylinder} radius.
+ In the current example each {\tt LadderCylinder} object contains two cylinders separated by $2~{\rm mm}$ in radius, which represents the concept of VXD as 
+ a set of three so-called "double-sided" layers.
+ 
+ \item  {\bf The SIT system:} this system is composed of two double-sided layers as in the case of the VXD detector. As such, its geometry description is 
+ the same.
+ 
+ \item  {\bf The FTD system:} this system is made of a set of seven disks both in the forward and backward direction.
+ 
+ \item  {\bf The TPC system:} this input file is made in turn of three input files,
+   \begin{itemize}
+    \item  {\it System walls:} this input file describes the TPC walls, which are a combination of cylinders and disks made of iron.
+    
+    \item  {\it Sensing layers:} the ILC TPC provides up to 220 space points, which in the current case are modeled as a set of 220 cylindrical sensitive 
+    layers between the inner and outer cylindrical walls. The geometry description is shown between the {\tt BeginGasDetector} and {\tt EndGasDetector} block, where 
+    the minimum and maximum radii, length, and number of layers are specified. This structure will build 220 sensitive GeoCylinder objects uniformly distributed 
+    between {\tt GasDetRin} and {\tt GasDetRout} and with thickness of ({\tt GasDetRout} - {\tt GasDetRin})/{\tt GasDetNLayers}.
+    
+    Each TPC sensitive layer is made of a material called {\tt TPCGAS} which is similar to air and has a parameter called {\tt ResoutionModel} which is set to 
+    {\tt TPC\_ILD\_Resol\_Model}. A resolution model is the modeling of the layer resolution in terms of its intrinsic resolution ({\tt ResolutionU} and {\tt ResolutionV}), 
+    the track position and momentum at intersection, as well as other parameters. If no resolution model is specified for a sensitive layer, the layer resolution is just the 
+    intrinsic resolution.
+    
+    The {\tt TPC\_ILD\_Resol\_Model} is defined at the top of this input file, inside the {\tt BeginTPCResolutionModel} and {\tt EndTPCResolutionModel} block, 
+    where a set of parameters are set. This is the same model used for the ILD TPC system as described in table 1 of~\cite{bib:ILDTracking}. A full description 
+    of these parameters is given in sec.~\ref{sec:GeoConf}.
+     
+    %\item  {\it Hit cuts:} ????
+   \end{itemize}
+   
+ \item {\bf Systems configuration:} this feature has already been discussed in the previous example. Just notice that in this case the systems configuration 
+ is quite more complex, but the concept is the same.
+ 
+ \item {\bf Track-Finding lagorithms:} this feature has already been discussed in the previous example. Just notice that there are several {\tt FPCCDTrackFinderAlgo} 
+ object defined in different $\theta$ region of the particle's momentum. It mainly separates the track-finder algorthms in the FTD syste, the VXD + SIT, and the region 
+ in between the last two. Also notice that the TPC system is not included in the systems list of any of the {\tt FPCCDTrackFinderAlgo} defined, meaning that TPC wont be 
+ used for the tracking efficiency calculation.
+
+\end{itemize}
+
+\noindent
+Now that the geometry is understood, lets proceed to run a couple of analyses.
+
+\subsubsection*{Geometry Visualization}
+
+The data-card for this analysis is the one with the name
+
+~\\
+{\small {\tt ILC\_TrackingSystem\_GeometryVisualization.txt}}.
+~\\
+
+\noindent
+It is similar to the corresponding one of the previous example. Lets run it and see the output. Part of the system's response is the print-out of the geometry weight, where several systems 
+are listed. Again, there are two outputs, one {\tt .pdf} and one {\tt .root} file. The contents of the files are self-evident. Lets just open the {\tt .root} file and plot. In there there is 
+list of canvases. By drawing the {\tt c\_geo21} canvas, it can be appreciated the complexity of the geometry by zooming-in in different regions and recognize the different geometry elements,
+{\it e.g.} sensitive elements, beam-pipe, supports, cables. The other canvases show the intersections of tracks with a variety of momenta with the geometry, where the hits produced at the 
+TPC can be appreciated.
+
+\subsubsection*{Tracking resolution analysis}
+
+The data-card for this analysis is the one with the name
+
+~\\
+{\small {\tt ILC\_TrackingSystem\_TrkResolutionAnalysis.txt}}.
+~\\
+
+\noindent
+Running this analysis takes a while ($\sim$10 min) because of the presence of the TPC. This systems adds hundreds of points (up to 220) to the track, which significantly increases the 
+number of calculations to be performed.
+
+Inside this analysis data-card is introduced the feature of voxeling, the data structure between the {\tt BeginVoxeling} and {\tt EndVoxeling} block. Inside this block at set of 
+voxels can be defined, where a set of ranges are specified. These ranges define a subset of the geometry elements which will then be considered for track navigation, reducing the 
+calculation time. This concept is useful when it is known in advance the region in space where the trajectories will be located. In the current example only one voxel is specified with 
+a range of $[0,10]~{\rm m}$ in the $z$ coordinate. The specified momenta ensure that all the trajectories will be on the positive hemisphere of the z-axis, so the geometry elements located 
+at $z < 0$ can be safely ignored when determining the tracks intersections with the geometry, which is what the specified voxels do.
+
+When a voxel is specified a print-out message shows for each geometry the number of voxeled geometry elements with respect to the total. In the current case there are 262 voxeled elements 
+out of 288.
+
+The output {\tt .pdf} files show the resolution on the track parameters for the specified $(\theta,\phi)$ values. The flags called {\tt PlotDOCAatHighMom} and {\tt PlotPerformancesVsTheta} 
+have been turned on inside the {\tt TrkResolAnalysisParams} data block. The first one triggers the plot of the resolution on the Distance-Of-Closest-Approach (DOCA) in the transverse plane 
+at hight momentum, {\it i.e.} without MS effects. The other flag triggers the plot of tracking performances as a function of $\theta$ for the different values of the specified momenta. All 
+these plots are shown from page 7 on.
+
+\subsubsection*{Efficiency analysis}
+
+The data-card for this analysis is the one with the name
+
+~\\
+{\small {\tt ILC\_TrackingSystem\_TrackingEfficiencyAnalysis.txt}}.
+~\\
+
+\noindent
+A similar set of plots to the previous example is produced, {\it i.e.} the tracking efficiency and average track parameters resolution vs momentum and $\theta$. Furthermore, a corresponding 
+{\tt .root} file is also produced.
+
+
+\subsubsection{Example-4: More realistic ILD tracking system}
+\label{subsubsec:Example4}
+
+This example considers a more realistic model of the ILD tracking system~\cite{bib:ILDcoll} by introducing the concept of mosaic structures. In the previous example the 
+tracking subsystems where modeled with simple geometrical shapes ({\it e.g.} cylinders and disks). In real life a layer of a silicon detector cannot be build as a perfect 
+cylinder as the elementary building blocks are flat rectangular silicon sensors. Instead the sensors are assembled in ladders (rectangular array of 
+several sensors) and these in turn are assembled in either spiral or alternating arrays in order to cover the full 360 degrees $\phi$ range in a near cylindrical shape. 
+In the same token, disks are an assembly of so-called petals. These set of mosaic structures are going to be presented in this example, which allow to have a more realistic 
+model of the geometry's material budget.
+
+~\\
+\noindent
+All the data-cards for this example can be found in the following directory,
+
+~\\
+{\small {\tt DataCards/Examples/Mosaic\_ILD\_Tracking/}}.
+~\\
+
+\noindent
+In order to simplify things, the TPC system is excluded from the geometry. The geo-data-card for this example is the file with the name {\tt ILC\_TrackinSystem\_Geometry.txt} 
+inside the {\tt GeometryCards} directory. The structure is very similar to the previous example, what changes is the modeling of the VXD, SIT and FTD systems. The first two are 
+modeled as a {\tt MosaicLadderPlane} objects in an alternating pattern. The FTD systems is modeled as a {\tt MosaicLadderPetal}. More information about the parameters of these 
+mosaic structures can be found in sec.~\ref{sec:GeoConf}.
+
+~\\
+\noindent
+Lets now run a couple of analysis.
+
+\subsubsection*{Geometry Visualization}
+
+The data-card for this analysis is the file with name
+
+~\\
+{\small {\tt ILC\_TrackingSystem\_GeometryVisualization.txt}}.
+~\\
+
+\noindent
+It is pretty similar to the one of the previous example. The execution time is a bit longer due to the complexity of the geometry. The mosaic structures can be better appreciated in the 
+$X-Y$ geometry projection.
+
+\subsubsection*{Tracking resolution analysis}
+
+The data-card for this analysis is the file with name
+
+~\\
+{\small {\tt ILC\_TrackingSystem\_TrkResolutionAnalysis.txt}}.
+~\\
+
+\noindent
+In this data card it can be appreciated that a range on the azimuthal ($\phi$) angle is specified, 30 values between range $(0,30)~{\rm deg}$. In the {\tt TrkResolAnalysisParams} data block 
+the flag {\tt PlotOnlyPhiAveraged} is turned on. This triggers the production of tracking performances averaged on the specified $\phi$ values. This is useful in geometries like this without 
+a full $\phi$-symmetry, but with a certain periodicity in $\phi$.
+
+Furthermore, as in the previous example a voxel is specified. The main difference is that in addition to the $z$-range, a $\phi$-range is also specified. This reduces the number of geometry elements 
+to be considered for geometry navigation from 398 to 223, almost a factor of two.
+
+\subsubsection*{Material budget analysis}
+
+It is also interesting to perform a material budget analysis of this complex geometry. The corresponding data-card is the file with name
+
+~\\
+{\small {\tt ILC\_TrackingSystem\_MatBudgetAnalysis.txt}}.
+~\\
+
+\noindent
+It is very similar to the one presented in sec.~\ref{subsubsec:Example2}. The main difference is that a range of $\phi$ values are specified. The 
+material budget vs polar angle variable plots will be averages on the $\phi$ values.
+
+The output {\tt .pdf} file has only one page (just one geometry specified). In these plots the complexity of the geometry can be appreciated, where 
+even the effect of cables and supports are considered. 
+
+\subsubsection{Example-5: SITRINEO Setup}
+\label{subsubsec:Example5}
+
+This example illustrates a configuration with a piece-wise definition of the magnetic field, which corresponds to a set of constant values of the B-field inside a set of 
+non-overlapping volumes and a constant value outside all of them. In this example a magnetic field is specified inside a certain 
+volume and zero outside. A very simple geometry is specified with 4 detection planes for tracking. All the data-cards for this example can be found at the 
+directory, 
+
+~\\
+{\tt DataCards/Examples/SITRINEO/}.
+~\\
+
+\noindent
+Lets open the main data-card, {\tt SITRINEO\_datacard.txt}. The configuration is very similar to the one of the beam-test example (sec.~\ref{subsubsec:Example1}). 
+This data-card configures the geometry visualization and track resolution parameters analyses. The two specified geometries only differ on in the 
+magnetic fields. Lets open either the {\tt Bfield.txt} or {\tt HighBfield.txt} files inside the {\tt GeometryCards} directory.
+
+In this case the B-field is specified inside the {\tt MultipleStepsBfield} block. In there a set of volumes are indicated as well as a list of "inside B-fields". 
+In the current case only one volume is specified ({\tt BeginBoxVolume} block), which is a box centered at $(0,0,1.15)~{\rm cm}$ and with widths 
+$(W_x,W_y,W_z) = (2,2,0.5)~{\rm cm}$, and the corresponding inside B-field ({\tt InsideBfield}) is along the x-axis with a magnitude of $1~{\rm T}$. 
+The number of specified volumes and "inside B-fields" has to be the same, otherwise the program will crash with an error message. As there is not an outside 
+B-field specified ({\tt OutsideBfield} block), it is set to zero. For a more complete description of the configuration of this a kind of B-field 
+see sec.~\ref{sec:GeoConf}.
+
+
+\noindent
+Now lets run this example as follows,
+
+~\\
+\noindent
+{\tt >\$ ./bin/GuariguanchiApp  fullpath/SITRINEO\_datacard.txt}
+~\\
+
+\noindent
+The execution should take a couple of mins. Only a {\tt .pdf} inside the {\tt Plots/Examples/SITRINEO/} output directory. 
+Lets open the {\tt .pdf} file. This is a multi-page file with several plots.
+
+The first two pages show a visualization of the 2 specified geometries. The geometries are the same, only differing in the magnetic field 
+inside the volume represented in totted-blue in the figures. Pages 3 to 8 show the "low-field" geometry with some tracks. The pages corresponds 
+to the different values of $(\theta,\phi)$ specified. Pages 9 to 14 show the "high-field" geometry with some tracks. In can be appreciated the 
+higher field.
+
+The last 6 pages show the track parameter resolution vs momentum for the different specified values of $(\theta,\phi)$. The set of track 
+parameters is five in this case, but differing to the ones of the helix track: $x_0$, $y_0$, $t^0_x = p^0_x/p^0_z$, $t^0_y = p^0_y/p^0_z$
+and the signed momentum $p$. This is the same track parameterization as used by the LHCb collaboration. As expected the performances of the 
+two geometries is the same of the $x_0$, $y_0$, $t^0_x$ and $t^0_y$ parameters, mainly determined by the first two measurement points. The 
+main difference in performance is on $p$, with the high-field geometry having better performances.
+
+\subsubsection{Other examples}
+\label{subsubsec:Other_examples}
+
+A list of other examples can be found inside the {\tt DataCard/Examples/} directory. Each one tries to model the tracking system of some previous, present and 
+future particle physics experiments. They are listed here below, with the corresponding location of all needed data-cards. The user should be able by now to understand 
+their contents. 
+
+\begin{itemize}
+ \item  {\bf SiD tracker}~\cite{bib:SiDcoll}: all the needed data-cards for this example can be found in {\tt DataCards/Examples/SiD\_Tracker/}. {\todo}.
+ 
+ \item  {\bf ATLAS Itk}~\cite{bib:ATLASItk}: all the needed data-cards for this example can be found in {\tt DataCards/Examples/ATLAS\_Itk/}. {\todo}.
+ 
+ \item  {\bf CMS upgraded tracker}~\cite{bib:CMSTrackerUpgrade}: all the needed data-cards for this example can be found in {\tt DataCards/Examples/CMS\_Tracker\_Upgrade/}. {\todo}.
+ 
+ \item  {\bf Belle-2 tracker}~\cite{bib:BelleIIcoll}: all the needed data-cards for this example can be found in {\tt DataCards/Examples/Belle2\_Tracker/}. {\todo}.
+ 
+ \item  {\bf LHCb tracker upgrade}~\cite{bib:LHCb_tracker_upgrade}: all the needed data-cards for this example can be found in {\tt DataCards/Examples/LHCb\_Tracker\_Upgrade/}. {\todo}.
+ 
+ \item  {\bf FOOT tracker}~\cite{bib:FOOT_tracker}: all the needed data-cards for this example can be found in {\tt DataCards/Examples/FOOT\_Tracking\_System/}.
+\end{itemize}
+
+
+
+
+

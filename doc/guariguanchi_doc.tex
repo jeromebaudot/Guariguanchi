@@ -1,0 +1,87 @@
+%
+% 
+% Release of skeleton 2017/11/24, Alejandro
+%
+%
+%\documentclass[11pt,twoside,titlepage]{article}
+\documentclass[11pt]{article}
+\usepackage{a4,amssymb,rotating}
+\usepackage{epsfig,subfigure,fancyheadings}
+\usepackage{graphicx,color}
+\usepackage{lineno}
+
+\setlength{\oddsidemargin}{+0.3cm}
+\setlength{\evensidemargin}{-0.3cm}
+\setlength{\textwidth}{15.5cm}
+\setlength{\textheight}{22.5cm}
+\setlength{\topmargin}{-2.0cm}
+
+\newif\ifcomment
+\commenttrue % comment to remove comments
+
+\newif\iflinenumber
+\linenumbertrue % comment to remove line numbering
+
+\newcommand{\comment}[1]{\ifcomment \color{blue}{\underline{Comment:} #1}\color{black}\fi}
+%\newcommand{\guari}{G\"UARIG\"UANCHI}
+\newcommand{\guari}{GUARIGUANCHI}
+\newcommand{\todo}{{\bf \color{red} NOTE: This feature is still waiting for implementation!!!}}
+
+\begin{document}
+\sloppy 
+% \linenumbers
+
+\title{{\bf User Manual}}
+
+\author{A.~P\'erez~P\'erez\\
+~\\
+{\it\footnotesize PICSEL Group, IPHC - CNRS} \\
+{\it\footnotesize 23 rue du Loess 67037 Strasbourg, France}\\
+}
+
+\date{November 2017}
+
+% \comment{There will be a front page with AIDA logo and format}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{figures/Guariguanchi_logo.png}
+\end{figure}
+
+\maketitle
+
+\newpage
+
+\begin{abstract}
+{\guari} is a tool for a simplified calculation of tracking performances which is fast and can be used as an intermediate step in the process 
+of tracking system optimization. It allows to quickly compare different detector geometries as well as combinations of sensor performances
+leading to a reduced set of configurations for deeper studies with full-simulation. The tool also allows to optimize beam-test setups in 
+terms of telescope pointing resolution at the device under test location. This document is intended to present the basis to install and start 
+using \guari. The document also provides all the information about the code structure and presents guide-lines on how to extend it.
+\end{abstract}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\input{Introduction}
+
+\input{Getting_Started}
+
+\input{Mathematical_Formalism}
+
+\input{Configuration}
+
+\input{Class_structure}
+
+\input{Summary}
+
+\input{Acknowledgements}
+
+\input{Biblio}
+
+\end{document}
+
+

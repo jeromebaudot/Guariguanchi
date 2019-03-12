@@ -1,0 +1,92 @@
+/////////////////////////////////
+////// Belle II SVD System //////
+/////////////////////////////////
+
+// SVD3 layer
+BeginGeoCylinder
+Name            SVD3
+Position        0.0  0.0  4.0  cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness      300.0 um
+Material        silicon
+XOX0            0.007
+Length          26.2 cm
+Radius           3.8 cm
+IsSensitive     true
+ResolutionU      8.0 um
+ResolutionV     23.0 um
+ROtime          20.0 ns
+Efficiency       0.99
+BkgRate         10.0  MHz/cm2
+LayerName        SVD3
+SystemName       SVD
+EndGeoCylinder
+
+
+// SVD4 layer
+BeginGeoCylinder
+Name            SVD4
+Position        0.0  0.0  6.0  cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness      300.0 um
+Material        silicon
+XOX0            0.007
+Length          44.0 cm
+Radius           8.0 cm
+IsSensitive     true
+ResolutionU      8.0 um
+ResolutionV     23.0 um
+ROtime          20.0 ns
+Efficiency       0.99
+BkgRate          3.0  MHz/cm2
+LayerName        SVD4
+SystemName       SVD
+EndGeoCylinder
+
+
+// SVD5 layer
+BeginGeoCylinder
+Name            SVD5
+Position        0.0  0.0  7.5  cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness      300.0 um
+Material        silicon
+XOX0            0.007
+Length          57.0   cm
+Radius          10.5 cm
+IsSensitive     true
+ResolutionU      8.0 um
+ResolutionV     23.0 um
+ROtime          20.0 ns
+Efficiency       0.99
+BkgRate          3.0  MHz/cm2
+LayerName        SVD5
+SystemName       SVD
+EndGeoCylinder
+
+
+// SVD6 layer
+BeginGeoCylinder
+Name            SVD6
+Position        0.0  0.0  7.5  cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness      300.0 um
+Material        silicon
+XOX0            0.007
+Length          66.0   cm
+Radius          13.5 cm
+IsSensitive     true
+ResolutionU      8.0 um
+ResolutionV     23.0 um
+ROtime          20.0 ns
+Efficiency       0.99
+BkgRate          3.0  MHz/cm2
+LayerName        SVD6
+SystemName       SVD
+EndGeoCylinder
+
+
+
+
+
+

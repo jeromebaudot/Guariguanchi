@@ -1,0 +1,45 @@
+/////////////////////////////////
+////// Belle II PXD System //////
+/////////////////////////////////
+
+// PXD1 layer
+BeginGeoCylinder
+Name            PXD1
+Position        0.0  0.0  1.1  cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness       50.0 um
+Material        silicon
+XOX0            0.002
+Length          11.0 cm
+Radius           1.4 cm
+IsSensitive     true
+ResolutionU     13.0 um
+ResolutionV     20.0 um
+ROtime          20.0 us
+Efficiency       0.999
+BkgRate         40.0  MHz/cm2
+LayerName        PXD1
+SystemName       PXD
+EndGeoCylinder
+
+// PXD2 layer
+BeginGeoCylinder
+Name            PXD2
+Position        0.0  0.0  2.0  cm
+RotAngles       0.0  0.0  0.0  deg
+Thickness       50.0 um
+Material        silicon
+XOX0            0.002
+Length          14.0   cm
+Radius           2.2 cm
+IsSensitive     true
+ResolutionU     13.0 um
+ResolutionV     20.0 um
+ROtime          20.0 us
+Efficiency       0.999
+BkgRate         40.0  MHz/cm2
+LayerName        PXD2
+SystemName       PXD
+EndGeoCylinder
+
+

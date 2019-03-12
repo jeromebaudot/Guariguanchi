@@ -1,0 +1,288 @@
+% Class structure
+\section{Class structure}
+\label{sec:Class_structure}
+
+This section describes the code structure of the {\guari} package. It is a series of modules or classes, each one 
+describing objects with specific properties and functions. Roughly, the code is divided as follows,
+
+\begin{itemize}
+  \item  {\bf Global tools}: this a class has a set of features used by the whole code.
+  
+  \item  {\bf Geometry class}: there is a class ({\tt GGeometry}) containing the geometry description. Each 
+  geometry contains a set of geometry elements ({\tt GGeoObject}), a magnetic field ({\tt GBField}), a list of 
+  resolution models ({\tt GResolutionModel}) and a list of efficiency models ({\tt GEfficiencyModel}).
+  
+  \item  {\bf Trajectory class}: there is a class ({\tt GTrajectory}) which contains all the information for the calculation of the 
+  particle's trajectory from the initial position and momentum. It contains a magnetic field ({\tt GBField}) and in it is also defined the 
+  track parameterization.
+  
+  \item  {\bf Tracker class}: this object contains a geometry ({\tt GGeometry}) as well as a trajectory ({\tt GTrajectory}) as internal 
+  variables. It performs all the need calculations related to the track parameters resolution and pseudo-efficiency: track-geometry 
+  intersections, space point covariance matrix due to multiple scattering, track intersections derivatives, ... (see section~\ref{sec:Math_formalism}).
+  
+  \item  {\bf Central class}: the main class of the code is called {\tt Guariguanchi}. It is the class which takes as input the 
+  data-card, builds the geometries and performs all the booked analyses.
+  
+\end{itemize}
+
+All these objects mentioned above will be detailed in the following sections. Some guide lines on how to extend the code are also given.
+
+% Global tools class
+\subsection{Global tools class}
+\label{subsec:global_tools}
+
+The class {\tt GGlobalTools} contains a set of global variables used by the whole package. In it are also defined global functions. Every object of the 
+package of has as an internal member a pointer to a global {\tt GGlobalTools} object.
+
+{\tt GGlobalTools} contains the {\guari} package unit system. It also contains the list of particles attributes (charge, mass, atomic weight, anti-particle, ...) 
+and possible material attributes ($X_0$, density, mean ionization energy, average $Z/A$, ...) needed for the calculation of the MS covariance matrix as well as $E_{\rm loss}$ 
+fluctuations.
+
+The class also contains a set of global variables ({\it e.g.} minimum distance cuts for numerical derivatives calculations) used in the 
+numerical calculations in the code.
+
+\subsubsection{Implementing a new unit}
+
+To implement a new unit, or combination of units just add the corresponding element to the {\tt units} {\tt std::map} inside the function {\tt GGlobalTools::FillTables}.
+
+\subsubsection{Implementing a new particle}
+
+To implement a new particle just add the corresponding particle name with its attributes to the {\tt ParticleMap} {\tt std::map} inside the function {\tt GGlobalTools::FillTables}.
+
+\subsubsection{Implementing a new material}
+
+To implement a new material just add the corresponding material name with its attributes to the {\tt MaterialMap} {\tt std::map} inside the function {\tt GGlobalTools::FillTables}.
+
+\subsection{Surface object classes}
+\label{subsec:Surf_class}
+
+A so-called {\tt GGeoObject} (see section~\ref{subsec:geoElm_class}) is a physical volume, which is defined by a set of boundary surfaces. In {\guari}, 
+these delimiting surfaces are implemented in a class called {\tt GSurfaceObject}. This class is a base class from which different kind of surfaces are 
+derived. Currently these are:
+
+\begin{itemize}
+  \item  {\tt GSurfacePlane}: surface plane class.
+  
+  \item  {\tt GSurfacePetal}: surface "petal" or trapezoid class.
+  
+  \item  {\tt GSurfaceDisk}: surface disk class.
+  
+  \item  {\tt GSurfaceDiskSection}: surface disk section class.
+  
+  \item  {\tt GSurfaceCone}: surface cone class.
+  
+  \item  {\tt GSurfaceConeSection}: surface cone section class.
+  
+  \item  {\tt GSurfaceCylinder}: surface cylinder class.
+  
+  \item  {\tt GSurfaceCylinderSection}: surface cylinder section class.
+\end{itemize}
+
+Each surface object is built by specifying a name, position, rotation matrix, pointer to a {\tt GGlobalTools} object, and a set of parameters which depend 
+on the surface type. Each surface has a local coordinate system $(U,V,W)$ with the proper transformation equations to and from the global coordinate system.
+
+\subsubsection{Implementing a new Surface class}
+
+In order to implement a new surface type just follow the examples of the classes above. The developer should fill-out the "virtual" functions in {\tt GSurfaceObject} with the 
+corresponding algorithms adapted to the new surface type.
+
+% geometry elements
+\subsection{Geometry object classes}
+\label{subsec:geoElm_class}
+
+Each element of a geometry is an object derived from the base-class {\tt GGeoObject}. Every GGeoObject is a physical volume delimited by a set of surfaces ({\tt GSurfaceObject}, 
+see section~\ref{subsec:Surf_class}). It also contains a so-called "main-surface", from which local coordinates $(U,V,W)$ are defined. As in the case of a surface object, a 
+{\tt GGeoObject} is built by specifying a set of mandatory parameters such as name, position, rotation matrix, material, pointer to a {\tt GGlobalTools} object, and a boolean 
+({\tt IsSensitive}) specifying if the physical volume is a sensitive material, and a set of parameters which depend on the physical volume type. If the {\tt IsSensitive} parameter 
+is true then an additional set of parameters need to be specified,
+
+\begin{itemize}
+  \item  Intrinsic single point resolution, {\it i.e.} $\sigma_U$ and $\sigma_V$,
+  
+  \item  Intrinsic measurement detection efficiency (for pseudo-efficiency calculation),
+  
+  \item  Readout time (for pseudo-efficiency calculation),
+  
+  \item  Base rate in hits per unit of surface per unit of time (for pseudo-efficiency calculation).
+\end{itemize}
+
+The {\tt GGeoObject} is a base-class from which different kind of physical volumes are derived. Currently these are:
+
+\begin{itemize}
+  \item  {\tt GGeoPlane}: physical volume plane class.
+  
+  \item  {\tt GGeoPetal}: physical volume "petal" or trapezoid class.
+  
+  \item  {\tt GGeoDisk}: physical volume disk class.
+  
+  \item  {\tt GGeoDiskSection}: physical volume disk section class.
+  
+  \item  {\tt GGeoCone}: physical volume cone class.
+  
+  \item  {\tt GGeoConeSection}: physical volume cone section class.
+  
+  \item  {\tt GGeoCylinder}: physical volume cylinder class.
+  
+  \item  {\tt GGeoCylinderSection}: physical volume cylinder section class.
+\end{itemize}
+
+\subsubsection{Implementing a new geometry object class}
+
+In order to implement a new physical volume type just follow the examples of the classes above. The developer should fill-out the "virtual" functions in {\tt GGeoObject} with the 
+corresponding algorithms adapted to the new physical volume type.
+
+\subsubsection{Implementing a new Mosaic geometry}
+
+As mentioned in section~\ref{subsec:Mosaic_geos} the so-called Mosaic geometries define ways to position in a regular pattern in space simple geometry elements ({\tt GGeoObject}). 
+If a new pattern has to be implemented follow examples mentioned in section~\ref{subsec:Mosaic_geos}, which are implemented in the file {\tt src/Setup.cc}.
+
+
+% B-field classes
+\subsection{B-field classes}
+\label{subsec:Bfield_tools}
+
+Each geometry also contains a magnetic field. It is implemented with a set of classes derived from the base-class {\tt GBField}. The derived classes currently implemented 
+are the following,
+
+\begin{itemize}
+  \item  {\tt GBFieldConstant}: this is a simple implementation of a constant magnetic field on the whole space.
+  
+  \item  {\tt GBFieldMultipleSteps}: this is a piece-wise implementation of the magnetic field. It is defined with a list of non-overlapping volumes 
+  with a constant magnetic field defined inside each one, and a constant B-field outside each of the volumes.
+\end{itemize}
+
+\subsubsection{Implementing a new B-field class}
+
+In order to implement a new magnetic field type just follow the examples of the classes above. The developer should fill-out the "virtual" functions in {\tt GBField} with the 
+corresponding algorithms adapted to the new magnetic field type.
+
+% Resolution model class
+\subsection{Resolution model class}
+\label{subsec:resolution_model}
+
+Each geometry contains also a list of resolution models. It is a function which calculates the measured space point resolution from the intrinsic physical volume resolution, 
+the coordinates and momentum of the particle's intersection with the volumes, as well as a set of parameters. A resolution model base-class is called {\tt GResolutionModel}. 
+The derived classes currently implemented are the following,
+
+\begin{itemize}
+  \item  {\tt GResolutionModelTPC}: this class is intended to describe the resolution model of gas tracking detector (TPC or drift chamber). It definition has been already described in 
+  section~\ref{subsubsec:GasDet_resolModel}.
+\end{itemize}
+
+\subsubsection{Implementing a new resolution model class}
+
+In order to implement a new resolution model type just follow the examples of the classes above. The developer should fill-out the "virtual" functions in {\tt GResolutionModel} with the 
+corresponding algorithms adapted to the new resolution model type.
+
+% Efficiency model class
+\subsection{Efficiency model class}
+\label{subsec:efficiency_model}
+
+Each geometry contains also a list of efficiency models. It is a function which calculates the measured space point detection efficiency from the intrinsic physical volume detection efficiency, 
+the coordinates and momentum of the particle's intersection with the volumes, as well as a set of parameters. Currently only a base-class called {\tt GEfficiencyModel} has been implemented. 
+
+\subsubsection{Implementing a new efficiency model class}
+
+In order to implement a new efficiency model type just follow the examples of the classes above. The developer should fill-out the "virtual" functions in {\tt GEfficiencyModel} with the 
+corresponding algorithms adapted to the new efficiency model type.
+
+% Geometry class
+\subsection{Geometry class}
+\label{subsec:geometry_class}
+
+A geometry is described by an object called {\tt GGeometry}. It contains a world volume ({\tt GGeoObject}), a list of geometry elements ({\tt GGeoObject}), a list of resolution ({\tt GResolutionModel}) 
+and efficiency ({\tt GEfficiencyModel}) models. It contains a set of functions to access it geometry elements and to calculated the measured space point resolution and efficiency. 
+
+% Trajectory classes
+\subsection{Trajectory classes}
+\label{subsec:trajectory_class}
+
+The particle's trajectory and parameterization will depend on the magnetic field of the region where the particle is moving. The particle trajectory is implemented in {\guari} with a set of 
+classes derived from the {\tt GTrajectory} base-class. The derived classes currently implemented are the following,
+
+\begin{itemize}
+  \item  {\tt GTrajectoryStraight}: straight trajectory in zero constant magnetic field. The track is parameterized with four parameters: positions $x_0$ and $y_0$, and  tilts $\tan\alpha_x$ and $\tan\alpha_y$ 
+  of the trajectory at the pivot point.
+  
+  \item  {\tt GTrajectoryHelix}: helix trajectory in a non-zero constant magnetic field. The track is parameterized as in~\cite{bib:BelleHelixParam} with five parameters: 
+  $d_{\rho}$, $d_z$, $\phi_0$, $tan\lambda$ and signed $p_t$.
+  
+  \item  {\tt GTrajectoryMultipleSteps}: corresponding trajectory on a piece-wise magnetic field ({\tt GBFieldMultipleSteps}), which consist of pieces of straight and helix trajectories. 
+  The track is parameterized as in LHCb~\cite{GGG} with five parameters: positions $x_0$ and $y_0$, tilts $\tan\alpha_x$ and $\tan\alpha_y$, and signed momentum $p$ of the trajectory at the pivot point. 
+\end{itemize}
+
+The equation of motion is implemented in the functions
+
+~\\
+\noindent
+{\tt GetTrueTrajectoryCoordinates(double s)}, \\
+{\tt GetTrueTrajectoryUnitMon(double s)}, \\
+
+\noindent
+where $s$ is the path length along the trajectory from origin of the particle. The track parameterization is implemented in the functions 
+
+~\\
+\noindent
+{\tt GetFitTrackCoordinates(double dummy, double sinit)}, \\
+{\tt GetFitTrackMomentum(double dummy, double sinit)}, \\
+
+\noindent
+where {\tt dummy} is track parameterization dummy parameter, and {\tt sinit} is the path length from the particle's origin corresponding to the dummy parameter.
+
+\subsubsection{Implementing a new Trajectory class}
+
+In order to implement a new trajectory type just follow the examples of the classes above. The developer should fill-out the "virtual" functions in {\tt GTrajectory} with the 
+corresponding algorithms adapted to the new trajectory type.
+
+% Track Finder class
+\subsection{Track Finder class}
+\label{subsec:track_finder_class}
+
+For the tracking efficiency calculation each geometry should contain a list of so-called {\tt TrackFinderAlgo} objects. Each object will define a track-finder algorithm in a detector 
+region for the calculation of the tracking efficiency. This is implemented with a set of classes derived from the base-class {\tt GTrackFinderAlgo}. These classes should just contain 
+the set of parameters for the specific track-finder algorithm to be used in the tracking efficiency calculation. The derived classes currently implemented are the following,
+
+\begin{itemize}
+  \item  {\tt GTrackFinderAlgoFPCCD}: FPCCD tracking finder parameters (c.f. section~\ref{subsubsec:FPCCDTrkEffic_calculation}).
+\end{itemize}
+
+The actual implementation of the tracking efficiency calculation is performed inside the Tracker class (c.f. section~\ref{subsec:tracker_class}) inside the function {\tt GTracker::GetFitTrackPseudoEfficiency}.
+
+\subsubsection{Implementing a new Track-finder algorithm}
+
+In order to implement a new {\tt GTrackFinderAlgo} object just follow the examples of the classes above. The user should define the parameters needed by the new track-finder algorithm. 
+For the corresponding tracking efficiency calculation the user should also follow the implementation of the tracking efficiency using the FPCCD algorithm. A new function similar to 
+{\tt GTracker::GetFitTrackPseudoEfficiency\_FPCCD} should be implement.
+
+
+% Tracker class
+\subsection{Tracker class}
+\label{subsec:tracker_class}
+
+The {\tt GTracker} class is the master class for the calculation of tracking performances. It contains a geometry ({\tt GGeometry}) and a trajectory ({\tt GTrajectory}). This class 
+contains all the functions needed to calculate the resolution on the track parameters, the material budget and the pseudo-efficiency. These set of function are implemented numerically,
+so than their implementation is independent on the nature of the trajectory and geometry.
+
+% Guariguanchi class
+\subsection{Guariguanchi class}
+\label{subsec:guariguanchi_class}
+
+Finally, the main class of the {\guari} package is called {\tt Guariguanchi}. This class is able to take as input a data-card and out of that build the geometries and perform all the booked 
+analysis and plots.
+
+The readout of the main and geometry data-cards is implemented in the {\tt src/Setup.cc} file. For every new feature implemented in the {\guari} class structure, a corresponding reader needs to 
+be implemented in this file, {\it e.g.} a new geometry, B-field, resolution or efficiency model. The developer is adviced to follow the examples already implemented in this file.
+
+All the geometry related operations are implemented in {\tt src/GeometryHandler.cc} file: geometries fill-up, printout, weight printout and plotting (geometry visualization, see 
+section~\ref{subsec:GeoVisual_analysis}).
+
+Finally, all the other analyses, Track parameters resolution (see section~\ref{subsec:trkResol_analysis}), telescope (see section~\ref{subsec:telescope_analysis}) and material budget 
+(see section~\ref{subsec:matbud_analysis}), are implemented in {\tt src/AnalysisHandler.cc} file with the functions, {\tt doTrkResolAnalysis()} and {\tt doMaterialBudgetAnalysis()}, 
+respectively.
+
+\subsubsection{Implementing a new analysis}
+
+The developer can modify, improve and extend the code as its needed for his application. If no new features need to be implemented but just new plots, we advise the user to follow the 
+examples already implemented inside {\tt src/AnalysisHandler.cc}.
+
+

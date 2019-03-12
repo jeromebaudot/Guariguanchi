@@ -1,0 +1,20 @@
+/////////////////////////////////////////
+/////// Beam-pipe Geometry //////////////
+/////////////////////////////////////////
+
+// Central beam-pipe Cylinder
+BeginGeoCylinder
+  Name            Central Beam-Pipe
+  Position        0.0  0.0  0.9  cm
+  RotAngles       0.0  0.0  0.0  deg
+  Thickness       2.0 mm
+  Material        beryllium
+  XOX0            0.008
+  Length          10.0  cm
+  Radius           1.2 cm
+  IsSensitive     false
+  LayerName       Beam-Pipe
+EndGeoCylinder
+
+
+

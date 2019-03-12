@@ -1,0 +1,22 @@
+GeometryName: Belle II simplified
+
+// The B-field
+InputFile:  DataCards/belle2_simplified/GeometryCards/Bfield.txt
+
+//World Volume
+InputFile:  DataCards/belle2_simplified/GeometryCards/WorldVolume.txt
+
+// Beam-pipe Geometry
+InputFile:  DataCards/belle2_simplified/GeometryCards/BeamPipe.txt
+
+// PXD system
+InputFile:  DataCards/belle2_simplified/GeometryCards/PXD_System.txt
+
+// SVD system
+InputFile:  DataCards/belle2_simplified/GeometryCards/SVD_System.txt
+
+// CDC system
+InputFile:  DataCards/belle2_simplified/GeometryCards/CDC_System.txt
+
+//Systems configuration
+//InputFile:  DataCards/belle2_simplified/GeometryCards/Systems_Configuration.txt

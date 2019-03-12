@@ -1,0 +1,36 @@
+\section{Introduction}
+\label{sec:Intro}
+
+{\guari} is a package created in the context of the ILD collaboration~\cite{bib:ILDcoll} and managed by the PICSEL group at IPHC (Strasbourg).
+It actually started as a tool for calculating telescope's pointing resolution at device under test (DUT) position for beam-test setups. It then quickly 
+transformed for the more challenging task of tracker optimization by comparing tracking performances of different detector configurations.
+
+The package has a set of tools which allows to calculate for a given momentum $(p,\theta,\phi)$ the track parameters covariance matrix. It also allows to 
+calculate a tracking efficiency with simplified pattern recognition algorithms. The details of the calculations are explained in section~\ref{sec:Math_formalism}.
+Of course, these calculations are performed with simplifying assumptions and ignore other effects that can only be taken into account with full-simulation 
+and realistic pattern recognition algorithms. Detector optimization can be guided by plotting the tracking performances as a function momentum, polar and 
+azimuthal angles for the different detector configurations.
+
+\subsection{General philosophy}
+
+{\guari} is a C++ software meant as a lightweight package in which only {\tt ROOT}~\cite{bib:root} pre-installation is required. During installation an executable 
+is produced which is later run with a configuration data-card. This data-card contains all the configuration variables for the analyses to be performed on a list of 
+geometries. The work-flow is as follows,
+
+\begin{itemize}
+
+ \item  Readout of the analysis configuration variables, {\it e.g.} particle type and origin, momentum ranges in terms of $(p,\theta,\phi)$, 
+ analysis variables, and list of geometry data-cards (geo-datacard).
+ 
+ \item  Geometries build-up. The geo-data-cards are readout to build a list of geometries.
+ 
+ \item  Each geometry has a so-called tracker associated to it. This object is the one able to perform all the tracking performances 
+ calculations related with the geometry, {\it e.g.} track intersections with geometry (including sensitive and insensitive elements), space points 
+ covariance matrix (including multiple scattering and energy loss fluctuations), track parameters covariance matrix and tracking efficiency.
+ 
+ \item  Depending of the analysis configuration, different plots can be produced: geometry visualization (including some tracks if specified), 
+ track parameters resolution  and/or tracking efficiency vs $(p,\theta,\phi)$.
+ 
+\end{itemize}
+
+The resulting plots are always stored in a multiple pages pdf file, and can if requested be stored in an output root file as well.
