@@ -1,0 +1,18 @@
+///////////////////////////////
+/////// Geometry Bfield ///////
+///////////////////////////////
+
+BeginMultipleStepsBfield
+  BeginInsideBfield
+    Magnitude      0.1  T
+    Direction      1  0  0
+  EndInsideBfield
+  BeginBoxVolume
+    Position        0.0  0.0  1.025  cm
+    RotAngles       0.0  0.0  0.0  deg
+    widthX          1.0 cm
+    widthY          1.0 cm
+    widthZ          0.25 cm
+  EndBoxVolume
+EndMultipleStepsBfield
+

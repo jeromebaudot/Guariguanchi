@@ -1,0 +1,16 @@
+//
+GeometryName: 0.5 T over 0.5 cm, lever-arm 5 mm
+
+//World Volume
+InputFile:  DataCards/SITRINEO/GeometryCards/WorldVolume.txt
+
+//Bfield
+InputFile:  DataCards/SITRINEO/GeometryCards/Bfield.txt
+
+//Telescope planes
+InputFile:  DataCards/SITRINEO/GeometryCards/SITRINEO_planesLargeSpacing.txt
+
+
+
+
+
